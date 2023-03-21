@@ -6,7 +6,7 @@ import numpy as np
 import gc
 from timeit import default_timer
 
-ITERATIONS = 10
+ITERATIONS = 150
 
 class Trainer:
 
@@ -45,13 +45,13 @@ class Trainer:
         prev:Program = None
         prev_matches = 0
         while count < ITERATIONS and not converged:
-            if (count%100 == 0 and count != 0):
-                print('Count'+str(seed)+': ' + str(count) + ' -> ' + str(self.__best.getFitness()))
             work = default_timer()
             # self.evaluatePop(self.__pop)
             self.__train_set.apply(self.evaluatePop,1,args=(self.__pop,))
             work_end = default_timer() - work
-            print('evaluating', work_end)
+            if (count%10 == 0 and count != 0):
+                print('Count'+str(seed)+': ' + str(count) + ' -> ' + str(self.__best.getFitness()))
+                print('evaluating', work_end)
             # print(i,self.__getBest())
             self.__getBest()
             # print('\n' + str(self.__best.getFitness()) + '************************************************************')
@@ -95,7 +95,6 @@ class Trainer:
                 if (parent.getFitness() == best.getFitness):
                     if (best.getHits() < parent.getHits()):
                         best = parent
-        best.prune(self.__max_depth)
         best.calcNumChildren()
         return best
 
@@ -123,6 +122,8 @@ class Trainer:
         temp_val = node1.getVal()
         node1.setVal(node2.getVal())
         node2.setVal(temp_val)
+        new_program1.prune(self.__max_depth)
+        new_program2.prune(self.__max_depth)
         return [new_program1, new_program2]
 
     def __mutate(self) -> Program:
@@ -137,6 +138,7 @@ class Trainer:
         # Mutate 
         node.setChildren([])
         node.mutate(self.__max_depth)
+        new_program.prune(self.__max_depth)
         return new_program
 
     def __findNode(self, goal_pos, node: Node) -> Node:

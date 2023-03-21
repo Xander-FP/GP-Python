@@ -19,22 +19,20 @@ class Evaluator:
         return self.__data_set[item]
 
     def __performOperation(self, op, val1, val2 = 0):
-        match op:
-            case '+':
-                return val1 + val2
-            case '-':
-                return val1 - val2
-            case 'x':
-                return val1 * val2
-            case '/':
-                if (val2 == 0):
-                    return 1
-                return val1 / val2
-            case 'sqr':
-                return val1 * val1
-            case 'sqrt':
-                if (val1 >= 0):
-                    return math.sqrt(val1)
+        if op == '+':
+            return val1 + val2
+        if op == '-':
+            return val1 - val2
+        if op == 'x':
+            return val1 * val2
+        if op == '/':
+            if (val2 == 0):
                 return 1
-            case _:
-                return 0
+            return val1 / val2
+        if op == 'sqr':
+            return val1 * val1
+        if op == 'sqrt':
+            if (val1 >= 0):
+                return math.sqrt(val1)
+            return 1
+        return 0
