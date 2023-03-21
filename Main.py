@@ -25,18 +25,16 @@ def main(seed):
     # gp.viewPopulation()
     gp.test(best, seed)
 
-main(4)
-
-# if __name__ == "__main__":
-# #     # creating processes
-#     p = []
-#     for i in range(10):
-#         p.append(multiprocessing.Process(target=main, args=(i,)))
+if __name__ == "__main__":
+#     # creating processes
+    p = []
+    for i in range(10):
+        p.append(multiprocessing.Process(target=main, args=(i,)))
   
-#     for process in p:
-#         process.start()
+    for process in p:
+        process.start()
 
-#     for process in p:
-#         process.join()
+    for process in p:
+        process.join()
 
-#     print("DONE!")
+    print("DONE!")
