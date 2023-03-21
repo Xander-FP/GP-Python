@@ -4,6 +4,7 @@ from Node import Node
 from Program import Program
 import numpy as np
 import gc
+from timeit import default_timer
 
 ITERATIONS = 10
 
@@ -13,15 +14,19 @@ class Trainer:
         self.__bound = bound
         self.__evaluator = Evaluator()
 
-    def worker(self,programs):
-            for i, row in self.__train_set.iterrows():
-                expected = row['Duration']
-                for program in programs:
-                    val = self.__evaluator.evaluate(program, row)
-                    program.addFitness(round(abs(expected - val),2))
-                    if (round(expected - val,2) <= self.__bound):
-                        program.addHit()
+    # def evaluatePop(self,programs):
+            # for i, row in self.__train_set.iterrows():
+                
     
+    def evaluatePop(self,row, programs):
+        expected = row['Duration']
+        for program in programs:
+            val = 1
+            val = self.__evaluator.evaluate(program, row)
+            program.addFitness(round(abs(expected - val),2))
+            if (round(expected - val,2) <= self.__bound):
+                program.addHit()
+
     # def eval(self,program,expected,row):
     #     val = self.__evaluator.evaluate(program, row)
     #     program.addFitness(round(abs(expected - val),2))
@@ -40,9 +45,13 @@ class Trainer:
         prev:Program = None
         prev_matches = 0
         while count < ITERATIONS and not converged:
-            if (count%100 == 0):
-                print('Count'+str(seed)+': ' + str(count))
-            self.worker(self.__pop)
+            if (count%100 == 0 and count != 0):
+                print('Count'+str(seed)+': ' + str(count) + ' -> ' + str(self.__best.getFitness()))
+            work = default_timer()
+            # self.evaluatePop(self.__pop)
+            self.__train_set.apply(self.evaluatePop,1,args=(self.__pop,))
+            work_end = default_timer() - work
+            print('evaluating', work_end)
             # print(i,self.__getBest())
             self.__getBest()
             # print('\n' + str(self.__best.getFitness()) + '************************************************************')
@@ -51,12 +60,12 @@ class Trainer:
 
             count += 1
             if (prev == self.__best):
-                print('matched')
                 prev_matches += 1
                 if prev_matches >= 10:
                     converged = True
             else:
                 prev_matches = 0
+                prev = self.__best
         
         return self.__best
 

@@ -1,10 +1,9 @@
 from GeneticProgram import GeneticProgram
 from timeit import default_timer
-import loky
 import multiprocessing
+import cProfile
 
-
-FILE_PATH = '../Data/gtfh9z865f-1/For_modeling.csv'
+FILE_PATH = './For_modeling.csv'
 POPULATION_SIZE = 100
 MAX_DEPTH = 4
 FUNCTION_SET = ['+','-','*','/'] #,'sqrt','sqr'
@@ -18,23 +17,23 @@ BOUND = 0.01
 
 def main(seed):
     gp = GeneticProgram(seed, FILE_PATH, POPULATION_SIZE, MAX_DEPTH, FUNCTION_SET, TERMINAL_SET, TERMINAL_BOUND, TOURNAMENT_SIZE, GROW_ROOM, CROSSOVER_RATE, BOUND)
-    start = default_timer()
     best = gp.train(seed)
-    duration = default_timer() - start
-    print(seed, ':', duration)
-    # gp.viewPopulation()
     gp.test(best, seed)
 
-if __name__ == "__main__":
-#     # creating processes
-    p = []
-    for i in range(10):
-        p.append(multiprocessing.Process(target=main, args=(i,)))
+main(1)
+
+# if __name__ == "__main__":
+#     start = default_timer()
+#     p = []
+#     for i in range(10):
+#         p.append(multiprocessing.Process(target=main, args=(i,)))
   
-    for process in p:
-        process.start()
+#     for process in p:
+#         process.start()
 
-    for process in p:
-        process.join()
+#     for process in p:
+#         process.join()
 
-    print("DONE!")
+#     duration = default_timer() - start
+#     print("DONE!")
+#     print("Duration:",duration)

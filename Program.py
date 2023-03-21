@@ -86,4 +86,6 @@ class Program:
         return True
     
     def __eq__(self,other):
-        return str(self) == str(other)
+        if (other == None):
+            return False
+        return round(self.getFitness(),1) == round(other.getFitness(),1)

@@ -1,2 +1,6 @@
 pip install pandas
 pip install numpy
+pip install scipy 
+pip install scikit-learn
+pip install sklearn
+pip install cython

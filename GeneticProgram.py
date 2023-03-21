@@ -11,7 +11,7 @@ from timeit import default_timer
 class GeneticProgram:
     
     def __init__(self,seed ,file_path, population_size, max_depth, f_set, t_set, terminal_bound, t_size, grow_room, crossover_rate, bound):
-        self.__df = pandas.read_csv(file_path,nrows=100)
+        self.__df = pandas.read_csv(file_path,nrows=1000)
         self.__splitData()
         self.__population_size = population_size
         self.__max_depth = max_depth
@@ -33,9 +33,15 @@ class GeneticProgram:
     
     def test(self, program, seed):
         tester = Tester(self.__bound)
-        tester.test(self.__test_set, program)
-        print(seed, round(program.getHits()/len(self.__test_set),4)*100, '%')
-        print(seed, program)
+        results = tester.test(self.__test_set, program)
+        # print(results)
+        predicted = results[0]
+        expected = results[1]
+        # print('Seed: ' + str(seed) + '--->\n', program)
+        print('Seed: ' + str(seed) + '--RMSE-->', tester.RMSE(predicted, expected))
+        print('Seed: ' + str(seed) + '--R_Squared-->', tester.R_Squared(predicted, expected))
+        print('Seed: ' + str(seed) + '--MedAE-->', tester.MedAE(predicted, expected))
+        print('Seed: ' + str(seed) + '--MAE-->', tester.MAE(predicted, expected))
 
     def viewPopulation(self):
         for program in self.__programs:
@@ -43,7 +49,6 @@ class GeneticProgram:
 
     def __splitData(self):
         NUM = 7
-        self.__train_set = []
         self.__train_set = self.__df[self.__df.index % NUM != 0]
         self.__test_set = self.__df[self.__df.index % NUM == 0]
 
