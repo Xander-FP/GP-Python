@@ -20,7 +20,7 @@ class Tester:
         predicted = []
         for i, row in test_set.iterrows():
             expected.append(row['Duration'])
-            predicted.append(round(self.__evaluator.evaluate(program, row),1))
+            predicted.append(round(self.__evaluator.evaluate(program, row)))
         return (predicted, expected)
 
 

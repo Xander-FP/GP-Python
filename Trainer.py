@@ -6,7 +6,7 @@ import numpy as np
 import gc
 from timeit import default_timer
 
-ITERATIONS = 150
+ITERATIONS = 200
 
 class Trainer:
 
@@ -34,7 +34,7 @@ class Trainer:
     #         program.addHit()
     #     return program
 
-    def train(self, train_set, initial_pop, max_depth,seed):
+    def train(self, train_set, initial_pop, max_depth, seed, f):
         self.__train_set = train_set
         self.__max_depth = max_depth
         self.__pop = initial_pop
@@ -52,6 +52,8 @@ class Trainer:
             if (count%10 == 0 and count != 0):
                 print('Count'+str(seed)+': ' + str(count) + ' -> ' + str(self.__best.getFitness()))
                 print('evaluating', work_end)
+                f.write(str(self.__best.getFitness()) + '\n')
+                f.write(str(self.__best) + '\n')
             # print(i,self.__getBest())
             self.__getBest()
             # print('\n' + str(self.__best.getFitness()) + '************************************************************')

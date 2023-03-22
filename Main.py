@@ -15,9 +15,10 @@ TRAINING_SET_SIZE = 0.7
 BOUND = 0.01
 
 def main(seed):
-    gp = GeneticProgram(seed, FILE_PATH, POPULATION_SIZE, MAX_DEPTH, FUNCTION_SET, TERMINAL_SET, TERMINAL_BOUND, TOURNAMENT_SIZE, GROW_ROOM, CROSSOVER_RATE, BOUND)
-    best = gp.train(seed)
-    gp.test(best, seed)
+    with open(str(seed) + '.txt','w') as f:
+        gp = GeneticProgram(seed, FILE_PATH, POPULATION_SIZE, MAX_DEPTH, FUNCTION_SET, TERMINAL_SET, TERMINAL_BOUND, TOURNAMENT_SIZE, GROW_ROOM, CROSSOVER_RATE, BOUND)
+        best = gp.train(seed, f)
+        gp.test(best, seed)
 
 if __name__ == "__main__":
     start = default_timer()

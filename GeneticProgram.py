@@ -11,7 +11,7 @@ from timeit import default_timer
 class GeneticProgram:
     
     def __init__(self,seed ,file_path, population_size, max_depth, f_set, t_set, terminal_bound, t_size, grow_room, crossover_rate, bound):
-        self.__df = pandas.read_csv(file_path,nrows=1000)
+        self.__df = pandas.read_csv(file_path,nrows=500000)
         self.__splitData()
         self.__population_size = population_size
         self.__max_depth = max_depth
@@ -25,11 +25,11 @@ class GeneticProgram:
         global_vars.tournament_size = t_size
         global_vars.crossover_rate = crossover_rate
 
-    def train(self, seed):
+    def train(self, seed, f):
         creator = Creator()
         trainer = Trainer(self.__bound)
         programs = creator.generateInitialPop(self.__population_size, self.__max_depth)
-        return trainer.train(self.__train_set,programs, self.__max_depth + self.__grow_room, seed) # Returns best program
+        return trainer.train(self.__train_set,programs, self.__max_depth + self.__grow_room, seed, f) # Returns best program
     
     def test(self, program, seed):
         tester = Tester(self.__bound)
