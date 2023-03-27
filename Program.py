@@ -24,8 +24,8 @@ class Program:
     def getFitness(self):
         return self.__fitness
     
-    def addFitness(self,__fitness):
-        self.__fitness += __fitness
+    def addFitness(self,fitness):
+        self.__fitness += fitness
 
     def assignFitness(self,tuple):
         self.__fitness = tuple[1]
@@ -77,12 +77,8 @@ class Program:
         return result
     
     def __ge__(self, other):
-        if ( self.getFitness() > other.getFitness()):
+        if ( self.getFitness() >= other.getFitness()):
                 return False
-        else:
-            if (self.getFitness() == other.getFitness):
-                if (self.getHits() < other.getHits()):
-                    return False
         return True
     
     def __eq__(self,other):

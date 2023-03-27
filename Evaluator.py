@@ -1,5 +1,7 @@
-import math
+import math #convert to cython
 from Node import Node
+from functools import lru_cache
+import GlobalVariables as global_vars
 class Evaluator:
 
     def evaluate(self, program, data_set):
@@ -16,7 +18,9 @@ class Evaluator:
         return self.__performOperation(current.getVal(), self.__evaluate(children[0]), self.__evaluate(children[1]))
         
     def __getValue(self, item):
-        return self.__data_set[item]
+        if item == 'CONST':
+            return global_vars.num.randrange(9)+1
+        return getattr(self.__data_set,item)
 
     def __performOperation(self, op, val1, val2 = 0):
         if op == '+':

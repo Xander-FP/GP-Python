@@ -6,63 +6,53 @@ import numpy as np
 import gc
 from timeit import default_timer
 
-ITERATIONS = 150
+ITERATIONS = 1000
 
 class Trainer:
 
-    def __init__(self, bound) -> None:
-        self.__bound = bound
+    def __init__(self) -> None:
         self.__evaluator = Evaluator()
 
-    # def evaluatePop(self,programs):
-            # for i, row in self.__train_set.iterrows():
+    def evaluatePop(self,pop):
+        for row in self.__train_set.itertuples():
+            self.evaluate(row, pop)
                 
-    
-    def evaluatePop(self,row, programs):
-        expected = row['Duration']
+    def evaluate(self,row, programs):
+        expected = getattr(row,'Duration')
         for program in programs:
-            val = 1
-            val = self.__evaluator.evaluate(program, row)
-            program.addFitness(round(abs(expected - val),2))
-            if (round(expected - val,2) <= self.__bound):
-                program.addHit()
+            predicted = self.__evaluator.evaluate(program, row)
+            program.addFitness(abs(expected - predicted))
 
-    # def eval(self,program,expected,row):
-    #     val = self.__evaluator.evaluate(program, row)
-    #     program.addFitness(round(abs(expected - val),2))
-    #     if (round(expected - val,2) <= self.__bound):
-    #         program.addHit()
-    #     return program
-
-    def train(self, train_set, initial_pop, max_depth,seed):
+    def train(self, train_set, initial_pop, max_depth,seed, f):
         self.__train_set = train_set
         self.__max_depth = max_depth
         self.__pop = initial_pop
-
-        # for i in range(ITERATIONS):
         count = 0
         converged = False
         prev:Program = None
         prev_matches = 0
         while count < ITERATIONS and not converged:
             work = default_timer()
-            # self.evaluatePop(self.__pop)
-            self.__train_set.apply(self.evaluatePop,1,args=(self.__pop,))
+            self.evaluatePop(self.__pop)
             work_end = default_timer() - work
             if (count%10 == 0 and count != 0):
                 print('Count'+str(seed)+': ' + str(count) + ' -> ' + str(self.__best.getFitness()))
                 print('evaluating', work_end)
-            # print(i,self.__getBest())
+                f.write('fitness: ' + str(self.__best.getFitness()) + '\n hits: ' + str(self.__best.getHits()) + '\n')
+                f.write(str(self.__best) + '\n')
             self.__getBest()
             # print('\n' + str(self.__best.getFitness()) + '************************************************************')
             self.__generateNewPop()
-            gc.collect()
+            # gc.collect()
 
             count += 1
             if (prev == self.__best):
                 prev_matches += 1
-                if prev_matches >= 10:
+                if prev_matches >= 15:
+                    f.write('fitness: ' + str(self.__best.getFitness()) + '\n hits: ' + str(self.__best.getHits()) + '\n')
+                    # f.write(str(self.__best) + '\n')
                     converged = True
+                    print('converged')
             else:
                 prev_matches = 0
                 prev = self.__best
@@ -91,10 +81,6 @@ class Trainer:
             parent = self.__pop[global_vars.num.randrange(len(self.__pop))]
             if (best == None or parent.getFitness() < best.getFitness()):
                 best = parent
-            else:
-                if (parent.getFitness() == best.getFitness):
-                    if (best.getHits() < parent.getHits()):
-                        best = parent
         best.calcNumChildren()
         return best
 
@@ -104,12 +90,15 @@ class Trainer:
         parent_program2 = self.__selectParent()
         new_program1 = parent_program1.clone()
         new_program2 = parent_program2.clone()
-        pos1 = global_vars.num.randrange(new_program1.getHead().getNumChildren())
-        if pos1 == 0:
-            pos1 = 1
-        pos2 = global_vars.num.randrange(new_program2.getHead().getNumChildren())
-        if pos2 == 0:
-            pos2 = 1
+        # Check if equal to 0 because global_vars.num.randrange cannot accept 0 as a parameter
+        if new_program1.getHead().getNumChildren() == 0:
+            pos1 = 0
+        else:
+            pos1 = global_vars.num.randrange(new_program1.getHead().getNumChildren())
+        if new_program2.getHead().getNumChildren() == 0:
+            pos2 = 0
+        else:
+            pos2 = global_vars.num.randrange(new_program2.getHead().getNumChildren())
         self.__current_pos = 0
         node1 = self.__findNode(pos1,new_program1.getHead())
         self.__current_pos = 0
@@ -130,9 +119,11 @@ class Trainer:
         # Select mutation point
         parent = self.__selectParent()
         new_program = parent.clone()
-        pos = global_vars.num.randrange(new_program.getHead().getNumChildren())
-        if pos == 0:
-            pos = 1
+        # Check if equal to 0 because global_vars.num.randrange cannot accept 0 as a parameter
+        if new_program.getHead().getNumChildren() == 0:
+            pos = 0
+        else:
+            pos = global_vars.num.randrange(new_program.getHead().getNumChildren())
         self.__current_pos = 0
         node = self.__findNode(pos, new_program.getHead())
         # Mutate 
