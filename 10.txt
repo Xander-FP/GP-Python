@@ -1,0 +1,135 @@
+fitness: 626.6999999999999
+ hits: 0
+1:- 
+2:- + 
+3:- Snow - GroundTemp 
+4:Distance Temp Temp Distance 
+fitness: 433.7200000000001
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance Precip - * 
+5:- + Dust - + Snow Distance + 
+6:+ Temp Precip Distance Humid + + Distance + + 
+7:Temp Distance Temp Solar Precip Temp Solar Distance Snow Dust 
+fitness: 391.1022729412997
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - + Wind - GroundTemp 
+5:- + Dust - Temp Distance + Wind 
+6:+ Temp Precip Distance Humid + Haversine Distance 
+7:Temp Distance Precip GroundTemp 
+fitness: 378.51950765494655
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance + - * 
+5:- + Dust - Temp + + Snow + + 
+6:+ Temp + Distance Humid + * Haversine + Distance + Dust Dust Haversine 
+7:Temp Distance Haversine Snow GroundTemp Solar Wind Solar Temp Solar Snow Dust 
+fitness: 373.47977716795003
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance + - * 
+5:Haversine + Dust - Temp + + Snow + + 
+6:+ Distance Humid Temp Haversine * + Distance Haversine Snow + + 
+7:Distance Snow GroundTemp Humid Temp Solar Precip Solar Distance Solar 
+fitness: 371.4556867247361
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance + - * 
+5:Haversine + Dust - Temp + + / + / 
+6:+ Distance Humid + Haversine * + Distance + + Humid Dust + + 
+7:Haversine Haversine GroundTemp Solar Haversine Temp Temp Solar Snow Dust Haversine Dust Temp Distance Distance Solar 
+fitness: 364.79928819685995
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance + - * 
+5:Haversine + Dust - Temp + + / + / 
+6:+ Distance Humid + Haversine * + Distance Humid + Snow Precip + + 
+7:Haversine Haversine GroundTemp Solar Haversine Temp Temp Snow Haversine Dust Temp Distance Distance Distance 
+fitness: 364.11741722457447
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance + - * 
+5:Haversine + Dust - Temp + + / + / 
+6:+ Distance Humid GroundTemp Haversine * + Distance Humid + Solar Precip + + 
+7:Haversine Haversine Snow Temp Temp Snow Temp Dust Temp Snow Distance Solar 
+fitness: 363.80984812962123
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance + - * 
+5:Haversine + Dust - Temp + + / * / 
+6:+ Distance Humid GroundTemp Haversine * + Distance Humid + Temp Solar Haversine / 
+7:Haversine Haversine Snow Solar Temp Snow GroundTemp Dust Humid Distance 
+fitness: 362.7323858698592
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance / - * 
+5:Haversine + Dust - Temp Distance + / + / 
+6:+ Distance Humid GroundTemp Temp Distance Humid Humid Solar Temp Distance + 
+7:Haversine Haversine Haversine Precip 
+fitness: 362.7323858698592
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance / - * 
+5:Haversine + Dust - Temp Distance + / / / 
+6:+ Distance Humid GroundTemp + Distance Dust * * Haversine + + 
+7:Haversine Haversine Temp Snow GroundTemp Snow Snow Distance GroundTemp Dust Distance Haversine 
+fitness: 362.7323858698592
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance / - * 
+5:Haversine + Dust - Temp Distance + / / Distance 
+6:+ Distance Humid GroundTemp + Distance Dust + Wind Humid 
+7:Haversine Haversine Temp Snow Precip Precip 
+fitness: 362.64631220024324
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance / - * 
+5:Haversine + Dust - Temp Distance + / * + 
+6:+ + Humid GroundTemp + Distance + + / Humid + * 
+7:Haversine Haversine Precip Distance Temp Snow Haversine Humid Humid Distance Humid Humid Humid Snow GroundTemp Haversine 
+fitness: 362.64631220024324
+ hits: 0
+1:+ 
+2:+ + 
+3:+ + + Dust 
+4:+ - Distance / - * 
+5:Haversine + Dust - Temp Distance + / / + 
+6:+ + Humid GroundTemp + Distance + + * Temp + / 
+7:Haversine Haversine Precip Distance Temp Snow Haversine Humid Humid Distance Haversine Distance Humid Snow Precip Snow 
+fitness: 362.64631220024324
+ hits: 0
+
+Seed: 10--RMSE-->6.800519011335048
+Seed: 10--R_Squared-->0.8317813799832252
+Seed: 10--MedAE-->3.0
+Seed: 10--MAE-->4.247058823529412
+
+Seed: 10--RMSE-->16.74912933060502
+Seed: 10--R_Squared-->0.35968186982632677
+Seed: 10--MedAE-->4.0
+Seed: 10--MAE-->7.333333333333333

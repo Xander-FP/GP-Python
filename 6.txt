@@ -1,0 +1,75 @@
+fitness: 427.62998875792
+ hits: 0
+1:+ 
+2:+ - 
+3:Distance + + / 
+4:+ * + + Humid Temp 
+5:/ GroundTemp Temp * Distance Distance * + 
+6:Haversine Wind / Haversine Snow Dust Temp Temp 
+7:Humid Temp 
+fitness: 364.6107930289706
+ hits: 0
+1:+ 
+2:+ - 
+3:Distance + + * 
+4:/ + + / Solar + 
+5:Haversine Wind + + Distance + Solar + * + 
+6:+ - + - Precip Distance Temp Temp + Humid Temp Temp 
+7:Distance Snow Precip Wind Haversine Haversine Solar Distance Distance Humid 
+fitness: 363.61079302897065
+ hits: 0
+1:+ 
+2:+ - 
+3:Distance + + Wind 
+4:/ + + / 
+5:Haversine Wind Distance + Distance + Solar - 
+6:+ - + / GroundTemp Wind 
+7:Haversine Haversine Solar Distance Distance Precip Solar Haversine 
+fitness: 357.061517804564
+ hits: 0
+1:+ 
+2:+ - 
+3:Distance + + * 
+4:/ + + / / + 
+5:Haversine Wind + + Distance Distance Distance + * Wind * Precip 
+6:+ Snow + - Haversine Haversine Wind Humid + - 
+7:Distance Snow Haversine Haversine Solar Distance GroundTemp Precip Dust Haversine 
+fitness: 343.7442124987806
+ hits: 0
+1:+ 
+2:+ - 
+3:Distance + - * 
+4:/ + + / * - 
+5:Haversine Wind + + + / * / * Solar + * 
+6:Distance * / - Distance + Distance + Snow Snow Solar Temp Haversine Snow Precip / Wind - 
+7:Snow Distance Haversine Wind Solar Distance Precip Distance Haversine Haversine GroundTemp GroundTemp Solar Distance 
+fitness: 339.54421249878067
+ hits: 0
+1:+ 
+2:+ - 
+3:Distance + - * 
+4:/ + + / * Wind 
+5:Haversine Wind + + + / + / Distance + 
+6:Distance * / - Distance + Distance + Temp Solar Solar Haversine Haversine / 
+7:Distance Distance Haversine Wind Solar Distance Precip Distance Haversine Haversine Distance Distance 
+fitness: 339.54421249878067
+ hits: 0
+1:+ 
+2:+ - 
+3:Distance + - * 
+4:/ + + / * Wind 
+5:Haversine Wind + + + / + / + + 
+6:Distance * / - Distance + Distance + Temp Snow Solar Haversine Precip Distance Wind Temp 
+7:Distance Haversine Haversine Wind Solar Distance Precip Distance Haversine Haversine 
+fitness: 339.54421249878067
+ hits: 0
+
+Seed: 6--RMSE-->6.444331754705517
+Seed: 6--R_Squared-->0.8489413053525273
+Seed: 6--MedAE-->2.0
+Seed: 6--MAE-->3.976470588235294
+
+Seed: 6--RMSE-->5.11207720338155
+Seed: 6--R_Squared-->0.9403505924362928
+Seed: 6--MedAE-->3.0
+Seed: 6--MAE-->3.466666666666667

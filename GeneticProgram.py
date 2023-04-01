@@ -1,17 +1,14 @@
 import pandas
 from random import Random
 import GlobalVariables as global_vars
-from random import random
 from Creator import Creator
-from Evaluator import Evaluator
 from Trainer import Trainer
 from Tester import Tester
-from timeit import default_timer
 
 class GeneticProgram:
     
     def __init__(self,seed ,file_path, population_size, max_depth, f_set, t_set, terminal_bound, t_size, grow_room, crossover_rate):
-        self.__df = pandas.read_csv(file_path,nrows=100000)
+        self.__df = pandas.read_csv(file_path,nrows=100)
         self.__splitData()
         self.__population_size = population_size
         self.__max_depth = max_depth

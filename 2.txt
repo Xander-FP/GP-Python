@@ -1,0 +1,39 @@
+fitness: 374.5932639357629
+ hits: 0
+1:+ 
+2:+ Distance 
+3:+ Haversine 
+4:+ + 
+5:Distance / Haversine + 
+6:* * Distance Distance 
+7:Distance Precip Dust Distance 
+fitness: 365.6024231327769
+ hits: 0
+1:+ 
+2:+ Distance 
+3:+ Haversine 
+4:+ + 
+5:Distance / + + 
+6:* + Distance * + Haversine 
+7:Haversine Humid Haversine Dust Precip Temp Haversine Haversine 
+fitness: 364.6024231327769
+ hits: 0
+1:+ 
+2:+ Distance 
+3:+ Haversine 
+4:+ + 
+5:Distance / + + 
+6:* + Distance * + Haversine 
+7:Distance Solar Haversine Precip Precip GroundTemp Haversine Haversine 
+fitness: 364.6024231327769
+ hits: 0
+
+Seed: 2--RMSE-->6.762352531826915
+Seed: 2--R_Squared-->0.8336642645624005
+Seed: 2--MedAE-->2.0
+Seed: 2--MAE-->4.247058823529412
+
+Seed: 2--RMSE-->5.409867527644892
+Seed: 2--R_Squared-->0.9331987502028891
+Seed: 2--MedAE-->3.0
+Seed: 2--MAE-->3.8

@@ -3,7 +3,6 @@ import GlobalVariables as global_vars
 from Node import Node
 from Program import Program
 import numpy as np
-import gc
 from timeit import default_timer
 
 ITERATIONS = 1000

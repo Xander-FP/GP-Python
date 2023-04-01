@@ -1,4 +1,4 @@
-import math #convert to cython
+import math
 from Node import Node
 from functools import lru_cache
 import GlobalVariables as global_vars

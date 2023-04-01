@@ -1,0 +1,28 @@
+fitness: 409.97105723678584
+ hits: 0
+1:+ 
+2:+ + 
+3:- + + Haversine 
+4:Distance Temp Haversine Haversine + + 
+5:Distance + - + 
+6:* - Temp Temp Distance * 
+7:GroundTemp Distance Distance Distance Solar Precip 
+fitness: 374.59326393576276
+ hits: 0
+1:/ 
+2:+ Wind 
+3:- + 
+4:Wind * Distance + 
+5:Humid Solar Distance Haversine 
+fitness: 374.59326393576276
+ hits: 0
+
+Seed: 0--RMSE-->7.471514532661012
+Seed: 0--R_Squared-->0.7969480152684822
+Seed: 0--MedAE-->3.0
+Seed: 0--MAE-->4.411764705882353
+
+Seed: 0--RMSE-->4.427188724235731
+Seed: 0--R_Squared-->0.9552629443272196
+Seed: 0--MedAE-->2.0
+Seed: 0--MAE-->3.2
