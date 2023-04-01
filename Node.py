@@ -116,3 +116,6 @@ class Node:
     def __str__(self) -> str:
         return self.__value
     
+    def __eq__(self, other:Node):
+        return self.getVal() == other.getVal()
+    

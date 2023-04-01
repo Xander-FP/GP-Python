@@ -3,6 +3,7 @@ from Node import Node
 
 class Program:
     def __init__(self, max_depth = None):
+        self.__current_similarity = 0
         self.__head = Node(None, False)
         if max_depth != None:
             self.__head.generate(max_depth)
@@ -57,6 +58,37 @@ class Program:
     
     def prune(self, max_depth):
         self.__head.prune(max_depth, 0)
+    
+    def getSimilarity(self):
+        return self.__current_similarity
+    
+    def setSimilarity(self, sim):
+        self.__current_similarity = sim
+
+    # Function compares current program to other program and keeps on counting similarity until there are no more matches
+    def calculateSimilarity(self, other):
+        similarity = 0
+        queue = [self.__head]
+        queue.append(other.getHead())
+        while (len(queue) > 0):
+            curr_node = queue.pop(0)
+            other_node = queue.pop(0)
+            if (curr_node == other_node):
+                similarity += 1
+                curr_children = curr_node.getChildren()
+                other_children = other_node.getChildren()
+                queue.append(curr_children[0])
+                queue.append(other_children[0])
+                if (len(curr_children) > 1):
+                    queue.append(curr_children[1])
+                else:
+                    queue.append(None)
+                if (len(other_children) > 1):
+                    queue.append(other_children[1])
+                else:
+                    queue.append(None)
+        self.__current_similarity = similarity
+        return similarity
 
     def __str__(self):
         self.updateLevel()
