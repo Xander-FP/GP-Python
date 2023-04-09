@@ -5,7 +5,7 @@ from Program import Program
 import numpy as np
 from timeit import default_timer
 
-ITERATIONS = 1000
+ITERATIONS = 1
 
 class Trainer:
 
@@ -104,20 +104,36 @@ class Trainer:
         node2 = self.__findNode(pos2,new_program2.getHead())
         
         # Make the swap
-        temp_children = node1.getChildren()
-        node1.setChildren(node2.getChildren())
-        node2.setChildren(temp_children)
-        temp_val = node1.getVal()
-        node1.setVal(node2.getVal())
-        node2.setVal(temp_val)
+        if node1.getParent() == None and node2.getParent() == None:
+            # If both trees are at the root then swapping them will have no effect
+            return [new_program1, new_program2]
+        elif node1.getParent() == None:
+            parent2 = node2.getParent()
+            self.__replace(parent2.getChildren(), node2, node1)
+            new_program1.setHead(node2)
+            node1.setParent(parent2)
+            node2.setParent(None)
+        elif node2.getParent() == None:
+            parent1 = node1.getParent()
+            self.__replace(parent1.getChildren(), node1, node2)
+            new_program2.setHead(node1)
+            node1.setParent(None)
+            node2.setParent(parent1)
+        else:
+            parent1 = node1.getParent()
+            parent2 = node2.getParent()
+            self.__replace(parent1.getChildren(), node1, node2)
+            self.__replace(parent2.getChildren(), node2, node1)
+            node1.setParent(parent2)
+            node2.setParent(parent1)
         new_program1.prune(self.__max_depth)
         new_program2.prune(self.__max_depth)
         return [new_program1, new_program2]
 
     def __mutate(self) -> Program:
         # Select mutation point
-        parent = self.__selectParent()
-        new_program = parent.clone()
+        parent_program = self.__selectParent()
+        new_program = parent_program.clone()
         # Check if equal to 0 because global_vars.num.randrange cannot accept 0 as a parameter
         if new_program.getHead().getNumChildren() == 0:
             pos = 0
@@ -126,10 +142,20 @@ class Trainer:
         self.__current_pos = 0
         node = self.__findNode(pos, new_program.getHead())
         # Mutate 
-        node.setChildren([])
-        node.mutate(self.__max_depth)
-        new_program.prune(self.__max_depth)
+        if node.getParent() == None:
+            new_node = Node.generateNode(None)
+            new_program.setHead(new_node)
+        else:
+            parent = node.getParent()
+            new_node = Node.generateNode(parent)
+            self.__replace(parent.getChildren(),node, new_node)
+        new_node.generate(self.__max_depth)
         return new_program
+    
+    def __replace(self, arr, node, replacement):
+        for i in range(len(arr)):
+            if arr[i] == node:
+                arr[i] = replacement
 
     def __findNode(self, goal_pos, node: Node) -> Node:
         if (self.__current_pos == goal_pos):

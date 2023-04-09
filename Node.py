@@ -3,45 +3,60 @@ from typing import List
 import GlobalVariables as global_vars
 
 class Node:
-    def __init__(self, parent, is_terminal) -> None:
+    def __init__(self, parent: Node, is_terminal: bool) -> None:
         self.__num_children = 0
         self.__is_terminal = is_terminal
         self.__children:List[Node] = []
-        if (is_terminal):
-            self.__value = self.__selectTerminal()
-        else:
-            self.__value = self.__selectFunction()
         self.__parent = parent
         if (not parent == None):
             self.__level = parent.getLevel() + 1
         else:
             self.__level = 1
 
+    @staticmethod
+    def generateNode(parent:Node, terminal:bool = None)-> Node:
+        if terminal == None:
+            terminal = Node.__determinIfIsTerminal()
+        if not terminal:
+            function = global_vars.function_set[global_vars.num.randrange(len(global_vars.function_set))]
+            if function == '+':
+                return Add(parent)
+            if function == '-':
+                return Subtract(parent)
+            if function == 'x':
+                return Multiply(parent)
+            if function == '/':
+                return Divide(parent)
+            
+        return Terminal(parent)
+
     def generate(self, maxdepth):# A recursive function to generate the trees
         if (not self.__is_terminal):
             if (self.__level >= maxdepth - 1):
-                node1 = Node(self, True)
-                if (not self.__value == 'sqr' and not self.__value == 'sqrt'):
-                    node2 = Node(self, True)
+                node1 = self.generateNode(self, True)
+                if (not self.getVal() == 'sqr' and not self.getVal() == 'sqrt'):
+                    node2 = self.generateNode(self, True)
             else:
-                node1 = Node(self, self.__determinIfIsTerminal())
+                node1 = self.generateNode(self, self.__determinIfIsTerminal())
                 node1.generate(maxdepth)
-                if (not self.__value == 'sqr' and not self.__value == 'sqrt'):
-                    node2 = Node(self, self.__determinIfIsTerminal())
+                if (not self.getVal() == 'sqr' and not self.getVal() == 'sqrt'):
+                    node2 = self.generateNode(self, self.__determinIfIsTerminal())
                     node2.generate(maxdepth)
             self.__children.append(node1)
             self.__num_children += node1.__num_children + 1
-            if (not self.__value == 'sqr' and not self.__value == 'sqrt'):
+            if (not self.getVal() == 'sqr' and not self.getVal() == 'sqrt'):
                 self.__children.append(node2)
                 self.__num_children += node2.__num_children + 1
 
-    def mutate(self, max_depth):
-        self.__is_terminal = self.__determinIfIsTerminal()
-        if (self.__is_terminal):
-            self.__value = self.__selectTerminal()
-        else:
-            self.__value = self.__selectFunction()
-        self.generate(max_depth)
+    # def mutate(self, max_depth): # Modify from here
+    #     self.__is_terminal = self.__determinIfIsTerminal()
+    #     if (self.__is_terminal):
+    #         self.__value = 
+    #         # Replace current Node with Terminal Node
+    #     else:
+    #         self.__value = self.__selectFunction()
+    #         # Replace current Node with Function Node
+    #     self.generate(max_depth)
 
     def updateLevel(self):
         for child in self.__children:
@@ -67,9 +82,11 @@ class Node:
         
 
     def getVal(self) -> str:
+        print('getVal Not implemented for this class')
         return self.__value
     
     def setVal(self, new_val):
+        print('setVal Not implemented for this class')
         self.__value = new_val
     
     def getChildren(self) -> List[Node]:
@@ -86,7 +103,7 @@ class Node:
         self.__children.append(child)
     
     def isTerminal(self):
-        return self.__is_terminal
+        return False
     
     def setTerminal(self, val):
         self.__is_terminal = val
@@ -103,19 +120,99 @@ class Node:
     def setNumChildren(self, num):
         self.__num_children = num
 
-    def __determinIfIsTerminal(self):
+    def getParent(self):
+        return self.__parent
+    
+    def setParent(self, parent:Node):
+        self.__parent = parent
+
+    def performOperation(self, val1, val2):
+        print('performOperation not implemented for class')
+
+    @staticmethod
+    def __determinIfIsTerminal():
         return global_vars.num.random() > global_vars.terminal_bound
          
+    def __str__(self) -> str:
+        return self.getVal()
+    
+    def __eq__(self, other:Node):
+        if other == None:
+            return False
+        return self.getVal() == other.getVal()
+    
+# ************************************************************** SUB CLASSES **************************************************
+class Add(Node):
+    def __init__(self, parent):
+        super().__init__(parent, False)
+
+    def performOperation(self, val1, val2):
+        return val1 + val2
+    
+    def getVal(self) -> str:
+        return '+'
+
+class Subtract(Node):
+    def __init__(self, parent):
+        super().__init__(parent, False)
+
+    def performOperation(self, val1, val2):
+        return val1 - val2
+    
+    def getVal(self) -> str:
+        return '-'
+
+class Multiply(Node):
+    def __init__(self, parent):
+        super().__init__(parent, False)
+
+    def performOperation(self, val1, val2):
+        return val1 * val2
+    
+    def getVal(self) -> str:
+        return '*'
+
+class Divide(Node):
+    def __init__(self, parent):
+        super().__init__(parent, False)
+
+    def performOperation(self, val1, val2):
+        if (val2 == 0):
+            return 1
+        return val1 / val2
+    
+    def getVal(self) -> str:
+        return '/'
+
+class Terminal(Node):
+    def __init__(self, parent):
+        self.__value = self.__selectTerminal()
+        super().__init__(parent, True)
+
+    def performOperation(self, val1, val2):
+        print('class = Terminal')
+        return super().performOperation(val1, val2)
+    
+    def getVal(self) -> str:
+        return self.__value
+    
+    def setVal(self, new_val):
+        self.__value = new_val
+
+    def isTerminal(self):
+        return True
+    
     def __selectTerminal(self):
         return global_vars.terminal_set[global_vars.num.randrange(len(global_vars.terminal_set))]
 
+# ******************************************** NOT USED IN CURRENT IMPLEMENTATION *******************************************************
 
-    def __selectFunction(self):
-        return global_vars.function_set[global_vars.num.randrange(len(global_vars.function_set))]
+class Square(Node):
+    def __init__(self, parent):
+        super().__init__(parent, False)
+
+    def performOperation(self, val1, val2 = 0):
+        return val1 * val1
     
-    def __str__(self) -> str:
-        return self.__value
-    
-    def __eq__(self, other:Node):
-        return self.getVal() == other.getVal()
-    
+    def getVal(self) -> str:
+        return 'sqr'

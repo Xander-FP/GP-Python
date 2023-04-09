@@ -14,8 +14,10 @@ class Evaluator:
             return self.__getValue(current.getVal())
         children = current.getChildren()
         if (len(children) == 1):
-            return self.__performOperation(current.getVal(), self.__evaluate(children[0]))
-        return self.__performOperation(current.getVal(), self.__evaluate(children[0]), self.__evaluate(children[1]))
+            return current.performOperation(self.__evaluate(children[0]))
+        return current.performOperation(self.__evaluate(children[0]), self.__evaluate(children[1]))
+        #     return self.__performOperation(current.getVal(), self.__evaluate(children[0]))
+        # return self.__performOperation(current.getVal(), self.__evaluate(children[0]), self.__evaluate(children[1]))
         
     def __getValue(self, item):
         if item == 'CONST':

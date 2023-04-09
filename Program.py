@@ -4,7 +4,7 @@ from Node import Node
 class Program:
     def __init__(self, max_depth = None):
         self.__current_similarity = 0
-        self.__head = Node(None, False)
+        self.__head = Node.generateNode(None, False)
         if max_depth != None:
             self.__head.generate(max_depth)
         self.__hits = 0
@@ -12,6 +12,9 @@ class Program:
 
     def getHead(self):
         return self.__head
+    
+    def setHead(self, head):
+        self.__head = head
     
     def resetHits(self):
         self.__hits = 0
@@ -33,20 +36,21 @@ class Program:
         self.__hits = tuple[2]
 
     def clone(self) -> Program:
+        # For this to work, implement a clone function in the node and its subclasses
         new_program = Program()
-        queue = [self.__head]
-        queue.append(new_program.getHead())
-        while (len(queue) > 0):
-            el = queue.pop(0)
-            curr_node = queue.pop(0)
-            curr_node.setVal(el.getVal())
-            curr_node.setNumChildren(el.getNumChildren())
-            for child in el.getChildren():
-                new_child = Node(curr_node,child.isTerminal())
-                curr_node.appendChild(new_child)
-                queue.append(child)
-                queue.append(new_child)
-        new_program.resetHits()
+        # queue = [self.__head]
+        # queue.append(new_program.getHead())
+        # while (len(queue) > 0):
+        #     el = queue.pop(0)
+        #     curr_node = queue.pop(0)
+        #     curr_node.setVal(el.getVal())
+        #     curr_node.setNumChildren(el.getNumChildren())
+        #     for child in el.getChildren():
+        #         new_child = Node(curr_node,child.isTerminal())
+        #         curr_node.appendChild(new_child)
+        #         queue.append(child)
+        #         queue.append(new_child)
+        # new_program.resetHits()
         return new_program
     
     def updateLevel(self):
