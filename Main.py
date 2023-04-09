@@ -23,7 +23,7 @@ def main(seed):
 if __name__ == "__main__":
     start = default_timer()
     p = []
-    for i in range(13):
+    for i in range(1):
         p.append(multiprocessing.Process(target=main, args=(i,)))
   
     for process in p:

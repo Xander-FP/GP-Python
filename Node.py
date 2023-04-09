@@ -117,5 +117,7 @@ class Node:
         return self.__value
     
     def __eq__(self, other:Node):
+        if other == None:
+            return False
         return self.getVal() == other.getVal()
     
