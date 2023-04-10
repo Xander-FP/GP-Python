@@ -48,16 +48,6 @@ class Node:
                 self.__children.append(node2)
                 self.__num_children += node2.__num_children + 1
 
-    # def mutate(self, max_depth): # Modify from here
-    #     self.__is_terminal = self.__determinIfIsTerminal()
-    #     if (self.__is_terminal):
-    #         self.__value = 
-    #         # Replace current Node with Terminal Node
-    #     else:
-    #         self.__value = self.__selectFunction()
-    #         # Replace current Node with Function Node
-    #     self.generate(max_depth)
-
     def updateLevel(self):
         for child in self.__children:
             child.setLevel(self.getLevel() + 1)
@@ -141,6 +131,9 @@ class Node:
             return False
         return self.getVal() == other.getVal()
     
+    def clone(self, parent):
+        print('abstract Node class for clone')
+    
 # ************************************************************** SUB CLASSES **************************************************
 class Add(Node):
     def __init__(self, parent):
@@ -151,6 +144,9 @@ class Add(Node):
     
     def getVal(self) -> str:
         return '+'
+    
+    def clone(self, parent):
+        return Add(parent)
 
 class Subtract(Node):
     def __init__(self, parent):
@@ -161,6 +157,9 @@ class Subtract(Node):
     
     def getVal(self) -> str:
         return '-'
+    
+    def clone(self, parent):
+        return Subtract(parent)
 
 class Multiply(Node):
     def __init__(self, parent):
@@ -171,6 +170,9 @@ class Multiply(Node):
     
     def getVal(self) -> str:
         return '*'
+    
+    def clone(self, parent):
+        return Multiply(parent)
 
 class Divide(Node):
     def __init__(self, parent):
@@ -183,6 +185,9 @@ class Divide(Node):
     
     def getVal(self) -> str:
         return '/'
+    
+    def clone(self, parent):
+        return Divide(parent)
 
 class Terminal(Node):
     def __init__(self, parent):
@@ -204,6 +209,11 @@ class Terminal(Node):
     
     def __selectTerminal(self):
         return global_vars.terminal_set[global_vars.num.randrange(len(global_vars.terminal_set))]
+    
+    def clone(self, parent):
+        new_node = Terminal(parent)
+        new_node.setVal(self.getVal())
+        return new_node
 
 # ******************************************** NOT USED IN CURRENT IMPLEMENTATION *******************************************************
 

@@ -36,21 +36,20 @@ class Program:
         self.__hits = tuple[2]
 
     def clone(self) -> Program:
-        # For this to work, implement a clone function in the node and its subclasses
         new_program = Program()
-        # queue = [self.__head]
-        # queue.append(new_program.getHead())
-        # while (len(queue) > 0):
-        #     el = queue.pop(0)
-        #     curr_node = queue.pop(0)
-        #     curr_node.setVal(el.getVal())
-        #     curr_node.setNumChildren(el.getNumChildren())
-        #     for child in el.getChildren():
-        #         new_child = Node(curr_node,child.isTerminal())
-        #         curr_node.appendChild(new_child)
-        #         queue.append(child)
-        #         queue.append(new_child)
-        # new_program.resetHits()
+        new_program.setHead(self.__head.clone(None))
+        queue = [self.__head]
+        queue.append(new_program.getHead())
+        while (len(queue) > 0):
+            parent = queue.pop(0)
+            curr_node = queue.pop(0)
+            curr_node.setNumChildren(parent.getNumChildren())
+            for child in parent.getChildren():
+                new_child = child.clone(curr_node)
+                curr_node.appendChild(new_child)
+                queue.append(child)
+                queue.append(new_child)
+        new_program.resetHits()
         return new_program
     
     def updateLevel(self):
