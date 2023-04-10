@@ -40,9 +40,9 @@ class Trainer:
                 f.write('fitness: ' + str(self.__best.getFitness()) + '\n hits: ' + str(self.__best.getHits()) + '\n')
                 f.write(str(self.__best) + '\n')
             self.__getBest()
+            # f.write(str(self.__best) + '\n \n')
             # print('\n' + str(self.__best.getFitness()) + '************************************************************')
             self.__generateNewPop()
-            # gc.collect()
 
             count += 1
             if (prev == self.__best):
@@ -99,31 +99,31 @@ class Trainer:
         else:
             pos2 = global_vars.num.randrange(new_program2.getHead().getNumChildren())
         self.__current_pos = 0
-        node1 = self.__findNode(pos1,new_program1.getHead())
+        node1, index1 = self.__findNode(pos1,new_program1.getHead(),0)
         self.__current_pos = 0
-        node2 = self.__findNode(pos2,new_program2.getHead())
+        node2, index2 = self.__findNode(pos2,new_program2.getHead(),0)
         
         # Make the swap
+        # If both trees are at the root then swapping them will have no effect
         if node1.getParent() == None and node2.getParent() == None:
-            # If both trees are at the root then swapping them will have no effect
             return [new_program1, new_program2]
         elif node1.getParent() == None:
             parent2 = node2.getParent()
-            self.__replace(parent2.getChildren(), node2, node1)
+            parent2.getChildren()[index2] = node1
             new_program1.setHead(node2)
             node1.setParent(parent2)
             node2.setParent(None)
         elif node2.getParent() == None:
             parent1 = node1.getParent()
-            self.__replace(parent1.getChildren(), node1, node2)
+            parent1.getChildren()[index1] = node2
             new_program2.setHead(node1)
             node1.setParent(None)
             node2.setParent(parent1)
         else:
             parent1 = node1.getParent()
             parent2 = node2.getParent()
-            self.__replace(parent1.getChildren(), node1, node2)
-            self.__replace(parent2.getChildren(), node2, node1)
+            parent1.getChildren()[index1] = node2
+            parent2.getChildren()[index2] = node1
             node1.setParent(parent2)
             node2.setParent(parent1)
         new_program1.prune(self.__max_depth)
@@ -140,7 +140,7 @@ class Trainer:
         else:
             pos = global_vars.num.randrange(new_program.getHead().getNumChildren())
         self.__current_pos = 0
-        node = self.__findNode(pos, new_program.getHead())
+        node, index = self.__findNode(pos, new_program.getHead(),0)
         # Mutate 
         if node.getParent() == None:
             new_node = Node.generateNode(None)
@@ -148,21 +148,18 @@ class Trainer:
         else:
             parent = node.getParent()
             new_node = Node.generateNode(parent)
-            self.__replace(parent.getChildren(),node, new_node)
+            parent.getChildren()[index] = new_node
         new_node.generate(self.__max_depth)
         return new_program
     
-    def __replace(self, arr, node, replacement):
-        for i in range(len(arr)):
-            if arr[i] == node:
-                arr[i] = replacement
-
-    def __findNode(self, goal_pos, node: Node) -> Node:
+    def __findNode(self, goal_pos, node: Node, index: int) -> Node:
         if (self.__current_pos == goal_pos):
-            return node
-        for child in node.getChildren():
+            return (node, index)
+        children = node.getChildren()
+        for i in range(len(children)):
+            child = children[i]
             self.__current_pos += 1
-            result = self.__findNode( goal_pos, child)
+            result = self.__findNode(goal_pos, child, i)
             if result != None:
                 return result
         return None

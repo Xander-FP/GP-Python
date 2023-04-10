@@ -56,8 +56,12 @@ class Node:
     def prune(self, max_level, curr_level):
         if curr_level >= max_level:
             if not self.isTerminal():
-                self.__value = self.__selectTerminal()
-            self.setChildren([])
+                children = self.__parent.getChildren()
+                for i in range(len(self.__parent.getChildren())):
+                    if children[i] == self:
+                        children[i] = Terminal(self.__parent)
+            else:
+                self.setChildren([])
         else:
             for child in self.__children:
                 child.prune(max_level, curr_level + 1)

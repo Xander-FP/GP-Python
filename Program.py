@@ -53,6 +53,7 @@ class Program:
         return new_program
     
     def updateLevel(self):
+        self.__head.setLevel(1)
         self.__head.updateLevel()
     
     def calcNumChildren(self):
