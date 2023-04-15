@@ -12,11 +12,13 @@ TOURNAMENT_SIZE = 5
 GROW_ROOM = 3
 CROSSOVER_RATE = 0.5
 TRAINING_SET_SIZE = 0.7
+G_THRESH = 3
+L_THRESH = 3
 
 def main(seed):
     with open(str(seed) + '.txt','w') as f:
         print('starting')
-        gp = GeneticProgram(seed, FILE_PATH, POPULATION_SIZE, MAX_DEPTH, FUNCTION_SET, TERMINAL_SET, TERMINAL_BOUND, TOURNAMENT_SIZE, GROW_ROOM, CROSSOVER_RATE)
+        gp = GeneticProgram(seed, FILE_PATH, POPULATION_SIZE, MAX_DEPTH, FUNCTION_SET, TERMINAL_SET, TERMINAL_BOUND, TOURNAMENT_SIZE, GROW_ROOM, CROSSOVER_RATE, G_THRESH, L_THRESH)
         best = gp.train(seed,f)
         gp.test(best, seed, f)
 

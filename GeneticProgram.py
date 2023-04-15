@@ -7,7 +7,7 @@ from Tester import Tester
 
 class GeneticProgram:
     
-    def __init__(self,seed ,file_path, population_size, max_depth, f_set, t_set, terminal_bound, t_size, grow_room, crossover_rate):
+    def __init__(self,seed ,file_path, population_size, max_depth, f_set, t_set, terminal_bound, t_size, grow_room, crossover_rate, g_thresh, l_thresh):
         self.__df = pandas.read_csv(file_path,nrows=1000)
         self.__splitData()
         self.__population_size = population_size
@@ -19,36 +19,31 @@ class GeneticProgram:
         global_vars.terminal_bound = terminal_bound
         global_vars.tournament_size = t_size
         global_vars.crossover_rate = crossover_rate
+        global_vars.local_optima = set()
+        global_vars.g_thresh = g_thresh
+        global_vars.l_thresh = l_thresh
 
     def train(self, seed, f):
+        # Initialize 
         creator = Creator()
         trainer = Trainer()
-        programs = creator.generateInitialPop(self.__population_size, self.__max_depth)
-        program = trainer.train(self.__train_set,programs, self.__max_depth + self.__grow_room, seed, f) # Returns best program
+
+        # Global search for ISBA
+        for i in range(10):
+            programs = creator.generateInitialPop(self.__population_size, self.__max_depth)
+            program = trainer.train(self.__train_set,programs, self.__max_depth + self.__grow_room, seed, f)
+            global_vars.local_optima.add(program)
+        
         tester = Tester()
         results = tester.test(self.__train_set, program, seed)
-        # print(results)
-        predicted = results[0]
-        expected = results[1]
-        # print('Seed: ' + str(seed) + '--->\n', program)
-        f.write('\nSeed: ' + str(seed) + '--RMSE-->' + str(tester.RMSE(predicted, expected)) + '\n')
-        f.write('Seed: ' + str(seed) + '--R_Squared-->' + str(tester.R_Squared(predicted, expected))+ '\n')
-        f.write('Seed: ' + str(seed) + '--MedAE-->' + str(tester.MedAE(predicted, expected))+ '\n')
-        f.write('Seed: ' + str(seed) + '--MAE-->' + str(tester.MAE(predicted, expected))+ '\n')
-        # f.write(str(results[0]) + '\n' + str(results[1]))
+        self.__writeResults(f, seed, predicted = results[0], expected = results[1], tester = tester)
         return program
     
     def test(self, program, seed, f):
         tester = Tester()
         results = tester.test(self.__test_set, program, seed)
-        # print(results)
-        predicted = results[0]
-        expected = results[1]
-        # print('Seed: ' + str(seed) + '--->\n', program)
-        f.write('\nSeed: ' + str(seed) + '--RMSE-->' + str(tester.RMSE(predicted, expected)) + '\n')
-        f.write('Seed: ' + str(seed) + '--R_Squared-->'+ str(tester.R_Squared(predicted, expected))+ '\n')
-        f.write('Seed: ' + str(seed) + '--MedAE-->'+ str(tester.MedAE(predicted, expected))+ '\n')
-        f.write('Seed: ' + str(seed) + '--MAE-->'+ str(tester.MAE(predicted, expected))+ '\n')
+        self.__writeResults(f, seed, predicted = results[0], expected = results[1], tester = tester)
+
 
     def viewPopulation(self):
         for program in self.__programs:
@@ -59,5 +54,11 @@ class GeneticProgram:
         NUM = 7
         self.__train_set = self.__df[self.__df.index % NUM != 0]
         self.__test_set = self.__df[self.__df.index % NUM == 0]
+
+    def __writeResults(self, f, seed, predicted, expected, tester):
+        f.write('\nSeed: ' + str(seed) + '--RMSE-->' + str(tester.RMSE(predicted, expected)) + '\n')
+        f.write('Seed: ' + str(seed) + '--R_Squared-->'+ str(tester.R_Squared(predicted, expected))+ '\n')
+        f.write('Seed: ' + str(seed) + '--MedAE-->'+ str(tester.MedAE(predicted, expected))+ '\n')
+        f.write('Seed: ' + str(seed) + '--MAE-->'+ str(tester.MAE(predicted, expected))+ '\n')
 
     

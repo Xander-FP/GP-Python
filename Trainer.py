@@ -5,7 +5,7 @@ from Program import Program
 import numpy as np
 from timeit import default_timer
 
-ITERATIONS = 100
+ITERATIONS = 1000
 
 class Trainer:
 
@@ -23,6 +23,7 @@ class Trainer:
             program.addFitness(abs(expected - predicted))
 
     def train(self, train_set, initial_pop, max_depth,seed, f):
+        # Make use of global_vars.local_optima
         self.__train_set = train_set
         self.__max_depth = max_depth
         self.__pop = initial_pop
@@ -34,12 +35,12 @@ class Trainer:
             work = default_timer()
             self.evaluatePop(self.__pop)
             work_end = default_timer() - work
+            self.__getBest()
             if (count%10 == 0 and count != 0):
                 print('Count'+str(seed)+': ' + str(count) + ' -> ' + str(self.__best.getFitness()))
-                print('evaluating', work_end)
-                f.write('fitness: ' + str(self.__best.getFitness()) + '\n hits: ' + str(self.__best.getHits()) + '\n')
-                f.write(str(self.__best) + '\n')
-            self.__getBest()
+                print('evaluating'+str(seed), work_end)
+            f.write('fitness: ' + str(self.__best.getFitness()) + '\n hits: ' + str(self.__best.getHits()) + '\n')
+            f.write(str(self.__best) + '\n')
             # f.write(str(self.__best) + '\n \n')
             # print('\n' + str(self.__best.getFitness()) + '************************************************************')
             self.__generateNewPop()
