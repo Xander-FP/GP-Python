@@ -79,6 +79,8 @@ class Program:
             other_node = queue.pop(0)
             if (curr_node == other_node):
                 similarity += 1
+                if (curr_node.isTerminal() or other_node.isTerminal()):
+                    continue
                 curr_children = curr_node.getChildren()
                 other_children = other_node.getChildren()
                 queue.append(curr_children[0])

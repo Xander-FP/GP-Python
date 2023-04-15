@@ -5,7 +5,7 @@ from Program import Program
 import numpy as np
 from timeit import default_timer
 
-ITERATIONS = 1
+ITERATIONS = 100
 
 class Trainer:
 
