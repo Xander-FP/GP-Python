@@ -44,12 +44,12 @@ class Trainer:
         while generation < ITERATIONS and not converged:
             work = default_timer()
             self.evaluatePop(self.__pop)
-            work_end = default_timer() - work
             self.__getBest()
-            if (generation%10 == 0 and generation != 0):
-                self.__logProgress(f,seed,generation,work_end)
             self.__generateNewPop()
+            work_end = default_timer() - work
             generation += 1
+            if (generation%10 == 0):
+                self.__logProgress(f,seed,generation,work_end)
             
             # Check if the GP has converged to a certain fitness
             if (prev == self.__best):
@@ -94,55 +94,53 @@ class Trainer:
         # Get the parents and get the nodes to swap
         parent_program1 = self.__selectParent()
         parent_program2 = self.__selectParent()
-        new_program1 = parent_program1.clone()
-        new_program2 = parent_program2.clone()
-        # Check if equal to 0 because global_vars.num.randrange cannot accept 0 as a parameter
-        if new_program1.getHead().getNumChildren() == 0:
-            pos1 = 0
-        else:
-            pos1 = global_vars.num.randrange(new_program1.getHead().getNumChildren())
-        if new_program2.getHead().getNumChildren() == 0:
-            pos2 = 0
-        else:
-            pos2 = global_vars.num.randrange(new_program2.getHead().getNumChildren())
-        self.__current_pos = 0
-        node1, index1 = self.__findNode(pos1,new_program1.getHead(),0)
-        self.__current_pos = 0
-        node2, index2 = self.__findNode(pos2,new_program2.getHead(),0)
-        
-        # Make the swap
-        # If both trees are at the root then swapping them will have no effect
-        if node1.getParent() == None and node2.getParent() == None:
-            return [new_program1, new_program2]
-        elif node1.getParent() == None:
-            parent2 = node2.getParent()
-            parent2.getChildren()[index2] = node1
-            new_program1.setHead(node2)
-            node1.setParent(parent2)
-            node2.setParent(None)
-        elif node2.getParent() == None:
-            parent1 = node1.getParent()
-            parent1.getChildren()[index1] = node2
-            new_program2.setHead(node1)
-            node1.setParent(None)
-            node2.setParent(parent1)
-        else:
-            parent1 = node1.getParent()
-            parent2 = node2.getParent()
-            parent1.getChildren()[index1] = node2
-            parent2.getChildren()[index2] = node1
-            node1.setParent(parent2)
-            node2.setParent(parent1)
+        while True:
+            new_program1 = parent_program1.clone()
+            new_program2 = parent_program2.clone()
+            pos1 = self.__getPos(new_program1.getHead().getNumChildren())
+            pos2 = self.__getPos(new_program2.getHead().getNumChildren())
+            self.__current_pos = 0
+            node1, index1 = self.__findNode(pos1,new_program1.getHead(),0)
+            self.__current_pos = 0
+            node2, index2 = self.__findNode(pos2,new_program2.getHead(),0)
+            
+            # Make the swap
+            # If both trees are at the root then swapping them will have no effect
+            if node1.getParent() == None and node2.getParent() == None:
+                return [new_program1, new_program2]
+            elif node1.getParent() == None:
+                parent2 = node2.getParent()
+                parent2.getChildren()[index2] = node1
+                new_program1.setHead(node2)
+                node1.setParent(parent2)
+                node2.setParent(None)
+            elif node2.getParent() == None:
+                parent1 = node1.getParent()
+                parent1.getChildren()[index1] = node2
+                new_program2.setHead(node1)
+                node1.setParent(None)
+                node2.setParent(parent1)
+            else:
+                parent1 = node1.getParent()
+                parent2 = node2.getParent()
+                parent1.getChildren()[index1] = node2
+                parent2.getChildren()[index2] = node1
+                node1.setParent(parent2)
+                node2.setParent(parent1)
+                if not (Structure.isGlobalExplored(new_program1) or Structure.isGlobalExplored(new_program2)):
+                    break
+                print('repeat crossover')
+
         new_program1.prune(self.__max_depth)
         new_program2.prune(self.__max_depth)
         return [new_program1, new_program2]
 
     def __mutate(self) -> Program:
+        parent_program = self.__selectParent()
         # Mutate until the structure is not the same; 
         # Reset to unmutated program 
         while True:
             # Select mutation point
-            parent_program = self.__selectParent()
             new_program = parent_program.clone()
             pos = self.__getPos(new_program.getHead().getNumChildren())
             self.__current_pos = 0
@@ -159,8 +157,6 @@ class Trainer:
             new_node.generate(self.__max_depth)
             if not Structure.isGlobalExplored(new_program):
                 break
-                # Exits the loop and keeps the mutation
-            print('Repeat mutation')
         
         return new_program
     
