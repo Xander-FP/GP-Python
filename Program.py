@@ -114,12 +114,15 @@ class Program:
 
         return result
     
-    def __ge__(self, other):
+    def __ge__(self, other) -> bool:
         if ( self.getFitness() >= other.getFitness()):
                 return False
         return True
     
-    def __eq__(self,other):
+    def __eq__(self,other) -> bool:
         if (other == None):
             return False
-        return round(self.getFitness(),1) == round(other.getFitness(),1)
+        return round(self.getFitness()) == round(other.getFitness())
+    
+    def __hash__(self) -> int:
+        return round(self.getFitness())

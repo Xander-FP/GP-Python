@@ -4,8 +4,9 @@ from Node import Node
 from Program import Program
 import numpy as np
 from timeit import default_timer
+import StructureMethods as Structure
 
-ITERATIONS = 1000
+ITERATIONS = 100
 
 class Trainer:
 
@@ -22,30 +23,35 @@ class Trainer:
             predicted = self.__evaluator.evaluate(program, row)
             program.addFitness(abs(expected - predicted))
 
+    def global_search(self, train_set, initial_pop, max_depth,seed, f):
+        pass
+
+    def local_search(self, train_set, initial_pop, max_depth,seed, f):
+        pass
+
     def train(self, train_set, initial_pop, max_depth,seed, f):
-        # Make use of global_vars.local_optima
+        # Initialize class variables
         self.__train_set = train_set
         self.__max_depth = max_depth
         self.__pop = initial_pop
-        count = 0
+        generation = 0
+
+        # To check if converged 
         converged = False
         prev:Program = None
         prev_matches = 0
-        while count < ITERATIONS and not converged:
+
+        while generation < ITERATIONS and not converged:
             work = default_timer()
             self.evaluatePop(self.__pop)
             work_end = default_timer() - work
             self.__getBest()
-            if (count%10 == 0 and count != 0):
-                print('Count'+str(seed)+': ' + str(count) + ' -> ' + str(self.__best.getFitness()))
-                print('evaluating'+str(seed), work_end)
-            f.write('fitness: ' + str(self.__best.getFitness()) + '\n hits: ' + str(self.__best.getHits()) + '\n')
-            f.write(str(self.__best) + '\n')
-            # f.write(str(self.__best) + '\n \n')
-            # print('\n' + str(self.__best.getFitness()) + '************************************************************')
+            if (generation%10 == 0 and generation != 0):
+                self.__logProgress(f,seed,generation,work_end)
             self.__generateNewPop()
-
-            count += 1
+            generation += 1
+            
+            # Check if the GP has converged to a certain fitness
             if (prev == self.__best):
                 prev_matches += 1
                 if prev_matches >= 15:
@@ -132,28 +138,33 @@ class Trainer:
         return [new_program1, new_program2]
 
     def __mutate(self) -> Program:
-        # Select mutation point
-        parent_program = self.__selectParent()
-        new_program = parent_program.clone()
-        # Check if equal to 0 because global_vars.num.randrange cannot accept 0 as a parameter
-        if new_program.getHead().getNumChildren() == 0:
-            pos = 0
-        else:
-            pos = global_vars.num.randrange(new_program.getHead().getNumChildren())
-        self.__current_pos = 0
-        node, index = self.__findNode(pos, new_program.getHead(),0)
-        # Mutate 
-        if node.getParent() == None:
-            new_node = Node.generateNode(None)
-            new_program.setHead(new_node)
-        else:
-            parent = node.getParent()
-            new_node = Node.generateNode(parent)
-            parent.getChildren()[index] = new_node
-        new_node.generate(self.__max_depth)
+        # Mutate until the structure is not the same; 
+        # Reset to unmutated program 
+        while True:
+            # Select mutation point
+            parent_program = self.__selectParent()
+            new_program = parent_program.clone()
+            pos = self.__getPos(new_program.getHead().getNumChildren())
+            self.__current_pos = 0
+            node, index = self.__findNode(pos, new_program.getHead(),0)
+
+            # perform mutation
+            if node.getParent() == None:
+                new_node = Node.generateNode(None)
+                new_program.setHead(new_node)
+            else:
+                parent = node.getParent()
+                new_node = Node.generateNode(parent)
+                parent.getChildren()[index] = new_node
+            new_node.generate(self.__max_depth)
+            if not Structure.isGlobalExplored(new_program):
+                break
+                # Exits the loop and keeps the mutation
+            print('Repeat mutation')
+        
         return new_program
     
-    def __findNode(self, goal_pos, node: Node, index: int) -> Node:
+    def __findNode(self, goal_pos: int, node: Node, index: int) -> Node:
         if (self.__current_pos == goal_pos):
             return (node, index)
         children = node.getChildren()
@@ -164,3 +175,16 @@ class Trainer:
             if result != None:
                 return result
         return None
+    
+    def __logProgress(self, f, seed, generation, time = 0):
+        print('Generation('+str(seed)+'): ' + str(generation) + ' -> ' + str(self.__best.getFitness()))
+        print('Time('+str(seed) + '):' + str(time))
+        f.write('Raw Fitness: ' + str(self.__best.getFitness()) + '\n')
+        f.write(str(self.__best) + '\n')
+
+    def __getPos(self, num_children):
+        # Check if equal to 0 because global_vars.num.randrange cannot accept 0 as a parameter
+        if num_children == 0:
+            return 0
+        else:
+            return global_vars.num.randrange(num_children)

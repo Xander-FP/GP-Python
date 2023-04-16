@@ -8,7 +8,7 @@ from Tester import Tester
 class GeneticProgram:
     
     def __init__(self,seed ,file_path, population_size, max_depth, f_set, t_set, terminal_bound, t_size, grow_room, crossover_rate, g_thresh, l_thresh):
-        self.__df = pandas.read_csv(file_path,nrows=1000)
+        self.__df = pandas.read_csv(file_path,nrows=100)
         self.__splitData()
         self.__population_size = population_size
         self.__max_depth = max_depth
@@ -29,10 +29,12 @@ class GeneticProgram:
         trainer = Trainer()
 
         # Global search for ISBA
-        for i in range(10):
+        for i in range(4):
             programs = creator.generateInitialPop(self.__population_size, self.__max_depth)
             program = trainer.train(self.__train_set,programs, self.__max_depth + self.__grow_room, seed, f)
             global_vars.local_optima.add(program)
+
+        # Local search for ISBA
         
         tester = Tester()
         results = tester.test(self.__train_set, program, seed)
