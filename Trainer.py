@@ -6,7 +6,7 @@ import numpy as np
 from timeit import default_timer
 import StructureMethods as Structure
 
-ITERATIONS = 100
+ITERATIONS = 250
 
 class Trainer:
 
@@ -129,7 +129,6 @@ class Trainer:
                 node2.setParent(parent1)
                 if not (Structure.isGlobalExplored(new_program1) or Structure.isGlobalExplored(new_program2)):
                     break
-                print('repeat crossover')
 
         new_program1.prune(self.__max_depth)
         new_program2.prune(self.__max_depth)

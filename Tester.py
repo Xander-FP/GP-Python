@@ -23,7 +23,7 @@ class Tester:
             predicted.append(pred)
             if (pred == expt):
                 program.addHit()
-        print(str(seed) + ':' + str((program.getHits()/len(test_set)) * 100) + ' %')
+        # print(str(seed) + ':' + str((program.getHits()/len(test_set)) * 100) + ' %')
         return (predicted, expected)
 
 

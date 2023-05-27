@@ -8,7 +8,7 @@ from Tester import Tester
 class GeneticProgram:
     
     def __init__(self,seed ,file_path, population_size, max_depth, f_set, t_set, terminal_bound, t_size, grow_room, crossover_rate, g_thresh, l_thresh):
-        self.__df = pandas.read_csv(file_path,nrows=100)
+        self.__df = pandas.read_csv(file_path,nrows=100000)
         self.__splitData()
         self.__population_size = population_size
         self.__max_depth = max_depth
@@ -23,28 +23,38 @@ class GeneticProgram:
         global_vars.g_thresh = g_thresh
         global_vars.l_thresh = l_thresh
 
-    def train(self, seed, f):
+    def train(self, seed, f, G_ITER):
         # Initialize 
         creator = Creator()
         trainer = Trainer()
+        tester = Tester()
 
         # Global search for ISBA
-        for i in range(4):
+        for i in range(G_ITER):
             programs = creator.generateInitialPop(self.__population_size, self.__max_depth)
             program = trainer.train(self.__train_set,programs, self.__max_depth + self.__grow_room, seed, f)
             global_vars.local_optima.add(program)
 
         # Local search for ISBA
         
-        tester = Tester()
-        results = tester.test(self.__train_set, program, seed)
-        self.__writeResults(f, seed, predicted = results[0], expected = results[1], tester = tester)
-        return program
+        # Pass through all the local optima for testing
+        print('Starting getting training accuracy for ' + str(seed))
+        for optimum in global_vars.local_optima:
+            results = tester.test(self.__train_set, optimum, seed)
+            self.__writeResults(f, seed, predicted = results[0], expected = results[1], tester = tester)
+        return global_vars.local_optima
     
-    def test(self, program, seed, f):
+    def test(self, optima, seed, f):
         tester = Tester()
-        results = tester.test(self.__test_set, program, seed)
-        self.__writeResults(f, seed, predicted = results[0], expected = results[1], tester = tester)
+        best = None
+        for optimum in optima:
+            results = tester.test(self.__test_set, optimum, seed)
+            temp = tester.RMSE(results[0],results[1])
+            if best == None or best > temp:
+                best = temp
+            self.__writeResults(f, seed, predicted = results[0], expected = results[1], tester = tester)
+        print(str(seed) + ': ' + str(best))
+        
 
 
     def viewPopulation(self):

@@ -10,22 +10,22 @@ TERMINAL_SET = ['Distance','Haversine','Wind','Snow','Precip','GroundTemp','Dust
 TERMINAL_BOUND = 0.5
 TOURNAMENT_SIZE = 5
 GROW_ROOM = 3
-CROSSOVER_RATE = 0.5
+CROSSOVER_RATE = 0.7
 TRAINING_SET_SIZE = 0.7
-G_THRESH = 3
-L_THRESH = 3
+G_THRESH = 5
+G_ITER = 4
 
 def main(seed):
     with open(str(seed) + '.txt','w') as f:
         print('starting')
         gp = GeneticProgram(seed, FILE_PATH, POPULATION_SIZE, MAX_DEPTH, FUNCTION_SET, TERMINAL_SET, TERMINAL_BOUND, TOURNAMENT_SIZE, GROW_ROOM, CROSSOVER_RATE, G_THRESH, L_THRESH)
-        best = gp.train(seed,f)
+        best = gp.train(seed,f,G_ITER)
         gp.test(best, seed, f)
 
 if __name__ == "__main__":
     start = default_timer()
     p = []
-    for i in range(1):
+    for i in range(12):
         p.append(multiprocessing.Process(target=main, args=(i,)))
   
     for process in p:
