@@ -4,6 +4,4 @@ num = None
 terminal_bound = None
 tournament_size = None
 crossover_rate = None
-local_optima = None
-g_thresh = None
-l_thresh = None
+max_codons = None

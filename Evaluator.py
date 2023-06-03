@@ -1,8 +1,14 @@
 from Node import Node
 import GlobalVariables as global_vars
+import math
 class Evaluator:
 
     def evaluate(self, program, data_set):
+        # print('-------------------')
+        # print(program.getFitness())
+        # print(program)
+        if (program.getFitness() == math.inf):
+            return math.inf
         self.__data_set = data_set
         return self.__evaluate(program.getHead())
 

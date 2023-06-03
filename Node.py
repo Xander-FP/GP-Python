@@ -53,6 +53,11 @@ class Node:
             child.setLevel(self.getLevel() + 1)
             child.updateLevel()
 
+    def addChild(self,node):
+        self.__children.append(node)
+        self.__num_children += 1
+
+
     def prune(self, max_level, curr_level):
         if curr_level >= max_level:
             if not self.isTerminal():
@@ -93,9 +98,6 @@ class Node:
             self.__is_terminal = False
         self.__children = children
 
-    def appendChild(self, child):
-        self.__children.append(child)
-    
     def isTerminal(self):
         return False
     
@@ -194,9 +196,9 @@ class Divide(Node):
         return Divide(parent)
 
 class Terminal(Node):
-    def __init__(self, parent):
-        self.__value = self.__selectTerminal()
-        super().__init__(parent, True)
+    def __init__(self, value):
+        self.__value = value
+        super().__init__(None, True)
 
     def performOperation(self, val1, val2):
         print('class = Terminal')

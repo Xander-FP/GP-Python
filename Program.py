@@ -2,12 +2,7 @@ from __future__ import annotations
 from Node import Node
 
 class Program:
-    def __init__(self, max_depth = None):
-        self.__current_similarity = 0
-        self.__head = Node.generateNode(None, False)
-        if max_depth != None:
-            self.__head.generate(max_depth)
-        self.__hits = 0
+    def __init__(self):
         self.__fitness = 0
 
     def getHead(self):
@@ -16,24 +11,11 @@ class Program:
     def setHead(self, head):
         self.__head = head
     
-    def resetHits(self):
-        self.__hits = 0
-    
-    def getHits(self):
-        return self.__hits
-    
-    def addHit(self):
-        self.__hits += 1
-
     def getFitness(self):
         return self.__fitness
     
     def addFitness(self,fitness):
         self.__fitness += fitness
-
-    def assignFitness(self,tuple):
-        self.__fitness = tuple[1]
-        self.__hits = tuple[2]
 
     def clone(self) -> Program:
         new_program = Program()
@@ -63,38 +45,6 @@ class Program:
     def prune(self, max_depth):
         self.__head.prune(max_depth, 0)
     
-    def getSimilarity(self):
-        return self.__current_similarity
-    
-    def setSimilarity(self, sim):
-        self.__current_similarity = sim
-
-    # Function compares current program to other program and keeps on counting similarity until there are no more matches
-    def calculateSimilarity(self, other):
-        similarity = 0
-        queue = [self.__head]
-        queue.append(other.getHead())
-        while (len(queue) > 0):
-            curr_node = queue.pop(0)
-            other_node = queue.pop(0)
-            if (curr_node == other_node):
-                similarity += 1
-                if (curr_node.isTerminal() or other_node.isTerminal()):
-                    continue
-                curr_children = curr_node.getChildren()
-                other_children = other_node.getChildren()
-                queue.append(curr_children[0])
-                queue.append(other_children[0])
-                if (len(curr_children) > 1):
-                    queue.append(curr_children[1])
-                else:
-                    queue.append(None)
-                if (len(other_children) > 1):
-                    queue.append(other_children[1])
-                else:
-                    queue.append(None)
-        self.__current_similarity = similarity
-        return similarity
 
     def __str__(self):
         self.updateLevel()
@@ -110,8 +60,6 @@ class Program:
             else:
                 curr_level = el.getLevel()
                 result += '\n' + str(curr_level) + ':' + el.getVal() + ' '
-
-
         return result
     
     def __ge__(self, other) -> bool:
